@@ -1,0 +1,16 @@
+# To-Do List App
+
+## Features
+- Add tasks
+- Delete tasks
+- Mark tasks complete
+
+## How to Run
+
+### Server
+cd server  
+npm install  
+npm run dev  
+
+### Client
+Open index.html in browser
