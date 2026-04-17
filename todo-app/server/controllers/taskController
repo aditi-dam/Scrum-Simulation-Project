@@ -1,0 +1,40 @@
+let tasks = [];
+
+exports.getTasks = (req, res) => {
+  res.json(tasks);
+};
+
+exports.addTask = (req, res) => {
+  const { title } = req.body;
+
+  const newTask = {
+    id: Date.now(),
+    title,
+    completed: false,
+    category: "uncategorized",
+    dueDate: null,
+    color: "#ffffff",
+  };
+
+  tasks.push(newTask);
+  res.json(newTask);
+};
+
+exports.deleteTask = (req, res) => {
+  const id = Number(req.params.id);
+  tasks = tasks.filter((task) => task.id !== id);
+  res.json({ message: "Task deleted" });
+};
+
+exports.updateTask = (req, res) => {
+  const id = Number(req.params.id);
+  const { completed, category, dueDate, color } = req.body;
+
+  tasks = tasks.map((task) =>
+    task.id === id
+      ? { ...task, completed, category, dueDate, color }
+      : task
+  );
+
+  res.json({ message: "Task updated" });
+};
