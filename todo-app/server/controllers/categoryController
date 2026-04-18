@@ -1,0 +1,40 @@
+let categories = [];
+
+exports.getCategories = (req, res) => {
+  res.json(categories);
+};
+
+exports.makeCategory = (req, res) => {
+  const { title } = req.body;
+
+  const newCategory = {
+    id: Date.now(),
+    title,
+    color: "#ffffff",
+  };
+
+  categories.push(newCategory);
+  res.json(newCategory);
+};
+
+exports.deleteCategory = (req, res) => {
+  const id = Number(req.params.id);
+  categories = categories.filter((category) => category.id !== id);
+  res.json({ message: "Category deleted" });
+};
+
+
+// Change to an updateCategory function later:
+
+// exports.updateTask = (req, res) => {
+//   const id = Number(req.params.id);
+//   const { completed, category, dueDate, color } = req.body;
+
+//   tasks = tasks.map((task) =>
+//     task.id === id
+//       ? { ...task, completed, category, dueDate, color }
+//       : task
+//   );
+
+//   res.json({ message: "Task updated" });
+// };
