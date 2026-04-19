@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add Task</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav>
+  <a href="/">Home</a>
+  <a href="/add-task.html">Add Task</a>
+  <a href="/completed.html">Completed</a>
+</nav>
+
+<h1>Add Task</h1>
+
+<input id="taskInput" placeholder="Task name" />
+<input id="dueDate" type="date" />
+<select id="category">
+  <option value="work">Work</option>
+  <option value="school">School</option>
+  <option value="home">Home</option>
+</select>
+
+<button onclick="addTask()">Add</button>
+
+<script src="app.js"></script>
+
+</body>
+</html>

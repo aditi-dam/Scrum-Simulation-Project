@@ -12,5 +12,5 @@ cd server
 npm install  
 npm run dev  
 
-### Client
+### Client 
 Open index.html in browser

@@ -5,15 +5,15 @@ exports.getTasks = (req, res) => {
 };
 
 exports.addTask = (req, res) => {
-  const { title } = req.body;
+  const { title, dueDate, category, color } = req.body;
 
   const newTask = {
     id: Date.now(),
     title,
     completed: false,
-    category: "uncategorized",
-    dueDate: null,
-    color: "#ffffff",
+    category: category || "uncategorized",
+    dueDate: dueDate || null,
+    color: color || "#000000",
   };
 
   tasks.push(newTask);
@@ -28,13 +28,20 @@ exports.deleteTask = (req, res) => {
 
 exports.updateTask = (req, res) => {
   const id = Number(req.params.id);
-  const { completed } = req.body;
+  const { completed, category, dueDate, color } = req.body;
 
-  tasks = tasks.map((task) =>
-    task.id === id
-      ? { ...task, completed }
-      : task
-  );
+  tasks = tasks.map((task) => {
+    if (task.id === id) {
+      return {
+        ...task,
+        completed: completed !== undefined ? completed : task.completed,
+        category: category !== undefined ? category : task.category,
+        dueDate: dueDate !== undefined ? dueDate : task.dueDate,
+        color: color !== undefined ? color : task.color,
+      };
+    }
+    return task;
+  });
 
   res.json({ message: "Task updated" });
 };
@@ -44,9 +51,7 @@ exports.changeTaskCategory = (req, res) => {
   const { category } = req.body;
 
   tasks = tasks.map((task) =>
-    task.id === id
-      ? { ...task, category }
-      : task
+    task.id === id ? { ...task, category } : task
   );
 
   res.json({ message: "Task category changed" });
