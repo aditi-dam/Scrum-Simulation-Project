@@ -1,17 +1,36 @@
+require("dotenv").config();
+
 let tasks = [];
+
+function fallbackCategory(title) {
+  const t = title.toLowerCase();
+
+  if (t.includes("study") || t.includes("hw") || t.includes("exam"))
+    return "school";
+  if (t.includes("meeting") || t.includes("project"))
+    return "work";
+
+  return "home";
+}
 
 exports.getTasks = (req, res) => {
   res.json(tasks);
 };
 
-exports.addTask = (req, res) => {
+exports.addTask = async (req, res) => {
   const { title, dueDate, category, color } = req.body;
+
+  let finalCategory = category;
+
+  if (!finalCategory || finalCategory === "auto") {
+    finalCategory = fallbackCategory(title);
+  }
 
   const newTask = {
     id: Date.now(),
     title,
     completed: false,
-    category: category || "uncategorized",
+    category: finalCategory || "uncategorized",
     dueDate: dueDate || null,
     color: color || "#000000",
   };
@@ -44,15 +63,4 @@ exports.updateTask = (req, res) => {
   });
 
   res.json({ message: "Task updated" });
-};
-
-exports.changeTaskCategory = (req, res) => {
-  const id = Number(req.params.id);
-  const { category } = req.body;
-
-  tasks = tasks.map((task) =>
-    task.id === id ? { ...task, category } : task
-  );
-
-  res.json({ message: "Task category changed" });
 };
