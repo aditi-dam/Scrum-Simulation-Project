@@ -1,6 +1,59 @@
 {
-  "users": [],
-  "tasks": [],
+  "users": [
+    {
+      "id": "1776655093654",
+      "username": "annalei",
+      "passwordHash": "$2b$12$sKkyRSC3P7fNWXdizCekvekTBzw5RRNnu3ADqdxa7QsxZJcrH5QfS",
+      "createdAt": "2026-04-20T03:18:13.654Z"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "1776655110265",
+      "userId": "1776655093654",
+      "title": "homework",
+      "completed": false,
+      "category": "school",
+      "dueDate": "2026-04-20",
+      "color": "#000000"
+    },
+    {
+      "id": "1776655116488",
+      "userId": "1776655093654",
+      "title": "homework",
+      "completed": false,
+      "category": "school",
+      "dueDate": "2026-04-21",
+      "color": "#000000"
+    },
+    {
+      "id": "1776655127849",
+      "userId": "1776655093654",
+      "title": "class assignment",
+      "completed": false,
+      "category": "school",
+      "dueDate": null,
+      "color": "#000000"
+    },
+    {
+      "id": "1776655133262",
+      "userId": "1776655093654",
+      "title": "mop house",
+      "completed": false,
+      "category": "home",
+      "dueDate": null,
+      "color": "#000000"
+    },
+    {
+      "id": "1776655140068",
+      "userId": "1776655093654",
+      "title": "professor meeting",
+      "completed": false,
+      "category": "work",
+      "dueDate": null,
+      "color": "#000000"
+    }
+  ],
   "categoryLabels": {
     "work": "Work",
     "school": "School",
