@@ -1,28 +1,65 @@
 const API_URL = "/tasks";
 
+async function getCurrentUser() {
+  const res = await fetch("/auth/me");
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data.user;
+}
+
+async function protectPage() {
+  const user = await getCurrentUser();
+  const path = window.location.pathname;
+
+  const isAuthPage =
+    path === "/auth/login" ||
+    path === "/auth/register" ||
+    path.endsWith("login.html") ||
+    path.endsWith("register.html");
+
+  if (!user && !isAuthPage) {
+    window.location.href = "/auth/login";
+    return null;
+  }
+
+  return user;
+}
+
 async function fetchTasks() {
+  const user = await protectPage();
+  if (!user) return;
+
   const res = await fetch(API_URL);
+  if (!res.ok) return;
+
   const tasks = await res.json();
   displayTasks(tasks);
 }
 
 async function fetchCompletedTasks() {
+  const user = await protectPage();
+  if (!user) return;
+
   const res = await fetch(API_URL);
+  if (!res.ok) return;
+
   let tasks = await res.json();
-  tasks = tasks.filter(t => t.completed);
+  tasks = tasks.filter((t) => t.completed);
   displayTasks(tasks);
 }
 
 function displayTasks(tasks) {
   const list = document.getElementById("taskList");
+  if (!list) return;
+
   list.innerHTML = "";
 
-  tasks.forEach(task => {
+  tasks.forEach((task) => {
     const li = document.createElement("li");
 
     li.innerHTML = `
       <input type="checkbox" ${task.completed ? "checked" : ""}
-        onchange="toggleTask(${task.id}, this.checked)" />
+        onchange="toggleTask('${task.id}', this.checked)" />
 
       <span style="color:${task.color || "#000000"}">
         ${task.title} (${task.category})
@@ -30,15 +67,15 @@ function displayTasks(tasks) {
       </span>
 
       <input type="color" value="${task.color || "#000000"}"
-        onchange="updateTask(${task.id}, { color: this.value })" />
+        onchange="updateTask('${task.id}', { color: this.value })" />
 
-      <select onchange="updateTask(${task.id}, { category: this.value })">
+      <select onchange="updateTask('${task.id}', { category: this.value })">
         <option value="work" ${task.category === "work" ? "selected" : ""}>Work</option>
         <option value="school" ${task.category === "school" ? "selected" : ""}>School</option>
         <option value="home" ${task.category === "home" ? "selected" : ""}>Home</option>
       </select>
 
-      <button onclick="deleteTask(${task.id})">Delete</button>
+      <button onclick="deleteTask('${task.id}')">Delete</button>
     `;
 
     list.appendChild(li);
@@ -53,7 +90,7 @@ async function addTask() {
   await fetch(API_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ title, dueDate, category }),
+    body: JSON.stringify({ title, dueDate, category })
   });
 
   window.location.href = "/";
@@ -61,34 +98,114 @@ async function addTask() {
 
 async function deleteTask(id) {
   await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-  fetchTasks();
+
+  if (window.location.pathname.includes("completed")) {
+    fetchCompletedTasks();
+  } else {
+    fetchTasks();
+  }
 }
 
 async function toggleTask(id, completed) {
   await fetch(`${API_URL}/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ completed }),
+    body: JSON.stringify({ completed })
   });
 
-  fetchTasks();
+  if (window.location.pathname.includes("completed")) {
+    fetchCompletedTasks();
+  } else {
+    fetchTasks();
+  }
 }
 
 async function updateTask(id, updates) {
   await fetch(`${API_URL}/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(updates),
+    body: JSON.stringify(updates)
   });
 
-  fetchTasks();
+  if (window.location.pathname.includes("completed")) {
+    fetchCompletedTasks();
+  } else {
+    fetchTasks();
+  }
 }
 
 function sortByDate() {
   fetch(API_URL)
-    .then(res => res.json())
-    .then(tasks => {
+    .then((res) => res.json())
+    .then((tasks) => {
       tasks.sort((a, b) => new Date(a.dueDate || 0) - new Date(b.dueDate || 0));
       displayTasks(tasks);
     });
 }
+
+async function logout() {
+  await fetch("/auth/logout", { method: "POST" });
+  window.location.href = "/auth/login";
+}
+
+async function continueAsGuest() {
+  const res = await fetch("/auth/guest", { method: "POST" });
+  if (!res.ok) return;
+  window.location.href = "/";
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const loginForm = document.getElementById("loginForm");
+  const registerForm = document.getElementById("registerForm");
+
+  if (loginForm) {
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById("loginUsername").value;
+      const password = document.getElementById("loginPassword").value;
+      const message = document.getElementById("loginMessage");
+
+      const res = await fetch("/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        message.textContent = data.error;
+        return;
+      }
+
+      window.location.href = "/";
+    });
+  }
+
+  if (registerForm) {
+    registerForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById("registerUsername").value;
+      const password = document.getElementById("registerPassword").value;
+      const confirmPassword = document.getElementById("registerConfirmPassword").value;
+      const message = document.getElementById("registerMessage");
+
+      const res = await fetch("/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password, confirmPassword })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        message.textContent = data.error;
+        return;
+      }
+
+      window.location.href = "/";
+    });
+  }
+});

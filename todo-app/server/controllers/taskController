@@ -1,6 +1,5 @@
 require("dotenv").config();
-
-let tasks = [];
+const { readStore, writeStore } = require("../services/dataStore");
 
 function fallbackCategory(title) {
   const t = title.toLowerCase();
@@ -24,11 +23,23 @@ function fallbackCategory(title) {
   return "home";
 }
 
-exports.getTasks = (req, res) => {
-  res.json(tasks);
+exports.getTasks = async (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ error: "You must be logged in." });
+  }
+
+  const userId = req.session.user.id;
+  const store = await readStore();
+  const userTasks = store.tasks.filter((task) => task.userId === userId);
+
+  res.json(userTasks);
 };
 
 exports.addTask = async (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ error: "You must be logged in." });
+  }
+
   const { title, dueDate, category, color } = req.body;
 
   let finalCategory = category ? category.toLowerCase() : "auto";
@@ -37,41 +48,65 @@ exports.addTask = async (req, res) => {
     finalCategory = fallbackCategory(title);
   }
 
+  const userId = req.session.user.id;
+  const store = await readStore();
+
   const newTask = {
-    id: Date.now(),
+    id: Date.now().toString(),
+    userId: userId,
     title,
     completed: false,
     category: finalCategory || "uncategorized",
     dueDate: dueDate || null,
-    color: color || "#000000",
+    color: color || "#000000"
   };
 
-  tasks.push(newTask);
+  store.tasks.push(newTask);
+  await writeStore(store);
+
   res.json(newTask);
 };
 
-exports.deleteTask = (req, res) => {
-  const id = Number(req.params.id);
-  tasks = tasks.filter((task) => task.id !== id);
+exports.deleteTask = async (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ error: "You must be logged in." });
+  }
+
+  const userId = req.session.user.id;
+  const id = req.params.id;
+  const store = await readStore();
+
+  store.tasks = store.tasks.filter(
+    (task) => !(task.id === id && task.userId === userId)
+  );
+
+  await writeStore(store);
   res.json({ message: "Task deleted" });
 };
 
-exports.updateTask = (req, res) => {
-  const id = Number(req.params.id);
-  const { completed, category, dueDate, color } = req.body;
+exports.updateTask = async (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ error: "You must be logged in." });
+  }
 
-  tasks = tasks.map((task) => {
-    if (task.id === id) {
+  const userId = req.session.user.id;
+  const id = req.params.id;
+  const { completed, category, dueDate, color } = req.body;
+  const store = await readStore();
+
+  store.tasks = store.tasks.map((task) => {
+    if (task.id === id && task.userId === userId) {
       return {
         ...task,
         completed: completed !== undefined ? completed : task.completed,
         category: category !== undefined ? category.toLowerCase() : task.category,
         dueDate: dueDate !== undefined ? dueDate : task.dueDate,
-        color: color !== undefined ? color : task.color,
+        color: color !== undefined ? color : task.color
       };
     }
     return task;
   });
 
+  await writeStore(store);
   res.json({ message: "Task updated" });
 };
