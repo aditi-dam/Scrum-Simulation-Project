@@ -5,10 +5,21 @@ let tasks = [];
 function fallbackCategory(title) {
   const t = title.toLowerCase();
 
-  if (t.includes("study") || t.includes("hw") || t.includes("exam"))
-    return "school";
-  if (t.includes("meeting") || t.includes("project"))
-    return "work";
+  if (
+    t.includes("study") ||
+    t.includes("hw") ||
+    t.includes("homework") ||
+    t.includes("exam") ||
+    t.includes("class")
+  ) return "school";
+
+  if (
+    t.includes("meeting") ||
+    t.includes("work") ||
+    t.includes("project") ||
+    t.includes("job") ||
+    t.includes("email")
+  ) return "work";
 
   return "home";
 }
@@ -20,7 +31,7 @@ exports.getTasks = (req, res) => {
 exports.addTask = async (req, res) => {
   const { title, dueDate, category, color } = req.body;
 
-  let finalCategory = category;
+  let finalCategory = category ? category.toLowerCase() : "auto";
 
   if (!finalCategory || finalCategory === "auto") {
     finalCategory = fallbackCategory(title);
@@ -54,7 +65,7 @@ exports.updateTask = (req, res) => {
       return {
         ...task,
         completed: completed !== undefined ? completed : task.completed,
-        category: category !== undefined ? category : task.category,
+        category: category !== undefined ? category.toLowerCase() : task.category,
         dueDate: dueDate !== undefined ? dueDate : task.dueDate,
         color: color !== undefined ? color : task.color,
       };
