@@ -1,7 +1,7 @@
 const API_URL = "/tasks";
 
 async function getCurrentUser() {
-  const res = await fetch("/auth/me");
+  const res = await fetch("/auth/me", { credentials: "include" });
   if (!res.ok) return null;
   const data = await res.json();
   return data.user;
@@ -29,7 +29,7 @@ async function fetchTasks() {
   const user = await protectPage();
   if (!user) return;
 
-  const res = await fetch(API_URL);
+  const res = await fetch(API_URL, { credentials: "include" });
   if (!res.ok) return;
 
   const tasks = await res.json();
@@ -40,7 +40,7 @@ async function fetchCompletedTasks() {
   const user = await protectPage();
   if (!user) return;
 
-  const res = await fetch(API_URL);
+  const res = await fetch(API_URL, { credentials: "include" });
   if (!res.ok) return;
 
   let tasks = await res.json();
@@ -54,25 +54,39 @@ function displayTasks(tasks) {
 
   list.innerHTML = "";
 
+  if (tasks.length === 0) {
+    list.innerHTML = '<div class="empty">Nothing here yet.</div>';
+    return;
+  }
+
   tasks.forEach((task) => {
     const li = document.createElement("li");
+
+    const tagClass = `tag tag-${task.category || "home"}`;
+    const dueDateHtml = task.dueDate
+      ? `<span class="due-date">${task.dueDate}</span>`
+      : "";
 
     li.innerHTML = `
       <input type="checkbox" ${task.completed ? "checked" : ""}
         onchange="toggleTask('${task.id}', this.checked)" />
 
-      <span style="color:${task.color || "#000000"}">
-        ${task.title} (${task.category})
-        ${task.dueDate ? " - " + task.dueDate : ""}
+      <span style="color:${task.color || "inherit"}; ${task.completed ? "text-decoration:line-through; opacity:0.5;" : ""}">
+        ${task.title}
       </span>
 
-      <input type="color" value="${task.color || "#000000"}"
-        onchange="updateTask('${task.id}', { color: this.value })" />
+      <span class="${tagClass}">${task.category || "home"}</span>
+
+      ${dueDateHtml}
+
+      <input type="color" value="${task.color || "#1a1917"}"
+        onchange="updateTask('${task.id}', { color: this.value })"
+        title="Task color" />
 
       <select onchange="updateTask('${task.id}', { category: this.value })">
-        <option value="work" ${task.category === "work" ? "selected" : ""}>Work</option>
+        <option value="work"   ${task.category === "work"   ? "selected" : ""}>Work</option>
         <option value="school" ${task.category === "school" ? "selected" : ""}>School</option>
-        <option value="home" ${task.category === "home" ? "selected" : ""}>Home</option>
+        <option value="home"   ${task.category === "home"   ? "selected" : ""}>Home</option>
       </select>
 
       <button onclick="deleteTask('${task.id}')">Delete</button>
@@ -90,6 +104,7 @@ async function addTask() {
   await fetch(API_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify({ title, dueDate, category })
   });
 
@@ -97,7 +112,7 @@ async function addTask() {
 }
 
 async function deleteTask(id) {
-  await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+  await fetch(`${API_URL}/${id}`, { method: "DELETE", credentials: "include" });
 
   if (window.location.pathname.includes("completed")) {
     fetchCompletedTasks();
@@ -110,6 +125,7 @@ async function toggleTask(id, completed) {
   await fetch(`${API_URL}/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify({ completed })
   });
 
@@ -124,6 +140,7 @@ async function updateTask(id, updates) {
   await fetch(`${API_URL}/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify(updates)
   });
 
@@ -135,7 +152,7 @@ async function updateTask(id, updates) {
 }
 
 function sortByDate() {
-  fetch(API_URL)
+  fetch(API_URL, { credentials: "include" })
     .then((res) => res.json())
     .then((tasks) => {
       tasks.sort((a, b) => new Date(a.dueDate || 0) - new Date(b.dueDate || 0));
@@ -144,12 +161,12 @@ function sortByDate() {
 }
 
 async function logout() {
-  await fetch("/auth/logout", { method: "POST" });
+  await fetch("/auth/logout", { method: "POST", credentials: "include" });
   window.location.href = "/auth/login";
 }
 
 async function continueAsGuest() {
-  const res = await fetch("/auth/guest", { method: "POST" });
+  const res = await fetch("/auth/guest", { method: "POST", credentials: "include" });
   if (!res.ok) return;
   window.location.href = "/";
 }
@@ -169,6 +186,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const res = await fetch("/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ username, password })
       });
 
@@ -195,6 +213,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const res = await fetch("/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ username, password, confirmPassword })
       });
 

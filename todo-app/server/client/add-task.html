@@ -7,26 +7,36 @@
 <body>
 
 <nav>
-  <a href="/">Home</a>
-  <a href="/add-task.html">Add Task</a>
+  <a href="/">Tasks</a>
+  <a href="/add-task.html">+ Add</a>
   <a href="/completed.html">Completed</a>
-  <a href="/auth/login">Login</a>
-  <a href="/auth/register">Register</a>
-  <a href="#" onclick="logout()">Logout</a>
+  <span class="nav-spacer"></span>
+  <a href="#" onclick="logout()" class="nav-logout">Logout</a>
 </nav>
 
-<h1>Add Task</h1>
-
-<input id="taskInput" placeholder="Task name" />
-<input id="dueDate" type="date" />
-<select id="category">
-  <option value="auto">Auto (AI)</option>
-  <option value="work">Work</option>
-  <option value="school">School</option>
-  <option value="home">Home</option>
-</select>
-
-<button onclick="addTask()">Add</button>
+<div class="page">
+  <h1>New Task</h1>
+  <div class="add-task-form">
+    <div class="form-group">
+      <label for="taskInput">Task name</label>
+      <input id="taskInput" type="text" placeholder="What needs to be done?">
+    </div>
+    <div class="form-group">
+      <label for="dueDate">Due date</label>
+      <input id="dueDate" type="date">
+    </div>
+    <div class="form-group">
+      <label for="category">Category</label>
+      <select id="category" class="form-select">
+        <option value="auto">Auto (AI)</option>
+        <option value="work">Work</option>
+        <option value="school">School</option>
+        <option value="home">Home</option>
+      </select>
+    </div>
+    <button class="btn-primary" onclick="addTask()">Add task</button>
+  </div>
+</div>
 
 <script src="app.js"></script>
 

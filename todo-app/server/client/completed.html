@@ -1,28 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Completed Tasks</title>
+  <title>Completed</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <nav>
-  <a href="/">Home</a>
-  <a href="/add-task.html">Add Task</a>
+  <a href="/">Tasks</a>
+  <a href="/add-task.html">+ Add</a>
   <a href="/completed.html">Completed</a>
-  <a href="/auth/login">Login</a>
-  <a href="/auth/register">Register</a>
-  <a href="#" onclick="logout()">Logout</a>
+  <span class="nav-spacer"></span>
+  <a href="#" onclick="logout()" class="nav-logout">Logout</a>
 </nav>
 
-<h1>Completed Tasks</h1>
-
-<ul id="taskList"></ul>
+<div class="page">
+  <h1>Completed</h1>
+  <ul id="taskList"></ul>
+</div>
 
 <script src="app.js"></script>
-<script>
-  fetchCompletedTasks();
-</script>
+<script>fetchCompletedTasks();</script>
 
 </body>
 </html>

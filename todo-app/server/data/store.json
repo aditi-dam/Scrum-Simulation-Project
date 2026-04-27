@@ -5,6 +5,12 @@
       "username": "annalei",
       "passwordHash": "$2b$12$sKkyRSC3P7fNWXdizCekvekTBzw5RRNnu3ADqdxa7QsxZJcrH5QfS",
       "createdAt": "2026-04-20T03:18:13.654Z"
+    },
+    {
+      "id": "1777319602101",
+      "username": "jcantos",
+      "passwordHash": "$2b$12$27KU4dzUnu1qghjg95rqkup7GouOjdUSNl08//aPNJuuUwYBJGwaC",
+      "createdAt": "2026-04-27T19:53:22.101Z"
     }
   ],
   "tasks": [
@@ -49,6 +55,60 @@
       "userId": "1776655093654",
       "title": "professor meeting",
       "completed": false,
+      "category": "work",
+      "dueDate": null,
+      "color": "#000000"
+    },
+    {
+      "id": "1777319628896",
+      "userId": "1777319602101",
+      "title": "Clean room",
+      "completed": true,
+      "category": "home",
+      "dueDate": "2026-04-15",
+      "color": "#7b6060"
+    },
+    {
+      "id": "1777319668383",
+      "userId": "1777319602101",
+      "title": "wash clothes",
+      "completed": true,
+      "category": "home",
+      "dueDate": null,
+      "color": "#c20000"
+    },
+    {
+      "id": "1777319831064",
+      "userId": "1777319602101",
+      "title": "bnm",
+      "completed": true,
+      "category": "home",
+      "dueDate": null,
+      "color": "#cf3a3a"
+    },
+    {
+      "id": "1777320111524",
+      "userId": "1777319602101",
+      "title": "Clean room",
+      "completed": true,
+      "category": "home",
+      "dueDate": null,
+      "color": "#fe5d5d"
+    },
+    {
+      "id": "1777320331633",
+      "userId": "1777319602101",
+      "title": "Clean the dishes at WORK",
+      "completed": true,
+      "category": "work",
+      "dueDate": null,
+      "color": "#8f0000"
+    },
+    {
+      "id": "1777320376468",
+      "userId": "1777319602101",
+      "title": "Clean room",
+      "completed": true,
       "category": "work",
       "dueDate": null,
       "color": "#000000"

@@ -6,27 +6,33 @@
 </head>
 <body>
 
-<nav>
-  <a href="/auth/login">Login</a>
-  <a href="/auth/register">Register</a>
-</nav>
+<div class="page">
+  <div class="form-card">
+    <h1>Welcome back</h1>
 
-<h1>Login</h1>
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="loginUsername">Username</label>
+        <input id="loginUsername" type="text" placeholder="your username" required>
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">Password</label>
+        <input id="loginPassword" type="password" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="btn-primary">Sign in</button>
+    </form>
 
-<form id="loginForm">
-  <input id="loginUsername" type="text" placeholder="Username" required>
-  <input id="loginPassword" type="password" placeholder="Password" required>
-  <button type="submit">Login</button>
-</form>
+    <div class="divider">or</div>
 
-<p id="loginMessage"></p>
+    <button onclick="continueAsGuest()" class="btn-secondary">Continue as guest</button>
 
-<p>
-  Don’t have an account?
-  <a href="/auth/register">Register here</a>
-</p>
+    <p id="loginMessage" class="message"></p>
 
-<button onclick="continueAsGuest()">Continue as Guest</button>
+    <div class="form-footer">
+      No account? <a href="/auth/register">Register here</a>
+    </div>
+  </div>
+</div>
 
 <script src="/app.js"></script>
 </body>
