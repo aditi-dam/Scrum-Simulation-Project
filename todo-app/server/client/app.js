@@ -100,12 +100,13 @@ async function addTask() {
   const title = document.getElementById("taskInput").value;
   const dueDate = document.getElementById("dueDate").value;
   const category = document.getElementById("category").value;
+  const color = document.getElementById("taskColor").value;
 
   await fetch(API_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
-    body: JSON.stringify({ title, dueDate, category })
+    body: JSON.stringify({ title, dueDate, category, color })
   });
 
   window.location.href = "/";
