@@ -112,6 +112,33 @@
       "category": "work",
       "dueDate": null,
       "color": "#000000"
+    },
+    {
+      "id": "1777394839567",
+      "userId": "1776655093654",
+      "title": "read textbook",
+      "completed": false,
+      "category": "school",
+      "dueDate": null,
+      "color": "#000000"
+    },
+    {
+      "id": "1777395559599",
+      "userId": "1776655093654",
+      "title": "study for exam",
+      "completed": false,
+      "category": "school",
+      "dueDate": null,
+      "color": "#000000"
+    },
+    {
+      "id": "1777395835312",
+      "userId": "1776655093654",
+      "title": "study for exam",
+      "completed": false,
+      "category": "school",
+      "dueDate": "2026-04-30",
+      "color": "#000000"
     }
   ],
   "categoryLabels": {

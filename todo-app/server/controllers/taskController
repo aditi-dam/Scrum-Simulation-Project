@@ -1,24 +1,31 @@
 require("dotenv").config();
 const { readStore, writeStore } = require("../services/dataStore");
+const { categorizeTaskWithAI } = require("../services/llmService");
 
 function fallbackCategory(title) {
   const t = title.toLowerCase();
 
-  if (
-    t.includes("study") ||
-    t.includes("hw") ||
-    t.includes("homework") ||
-    t.includes("exam") ||
-    t.includes("class")
-  ) return "school";
+  const schoolWords = [
+    "study", "hw", "homework", "exam", "quiz", "test", "class",
+    "lecture", "assignment", "essay", "paper", "project", "lab",
+    "school", "professor", "notes", "reading", "chapter"
+  ];
 
-  if (
-    t.includes("meeting") ||
-    t.includes("work") ||
-    t.includes("project") ||
-    t.includes("job") ||
-    t.includes("email")
-  ) return "work";
+  const workWords = [
+    "meeting", "work", "job", "email", "client", "boss",
+    "report", "presentation", "schedule", "shift", "call",
+    "deadline", "invoice", "office", "manager"
+  ];
+
+  const homeWords = [
+    "clean", "laundry", "dishes", "groceries", "cook", "meal",
+    "room", "house", "home", "trash", "vacuum", "errand",
+    "shopping", "bills"
+  ];
+
+  if (schoolWords.some((word) => t.includes(word))) return "school";
+  if (workWords.some((word) => t.includes(word))) return "work";
+  if (homeWords.some((word) => t.includes(word))) return "home";
 
   return "home";
 }
@@ -45,8 +52,12 @@ exports.addTask = async (req, res) => {
   let finalCategory = category ? category.toLowerCase() : "auto";
 
   if (!finalCategory || finalCategory === "auto") {
+  try {
+    finalCategory = await categorizeTaskWithAI(title);
+  } catch (e) {
     finalCategory = fallbackCategory(title);
   }
+}
 
   const userId = req.session.user.id;
   const store = await readStore();
