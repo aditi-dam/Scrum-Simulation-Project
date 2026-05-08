@@ -3,6 +3,21 @@
 <head>
   <title>Add Task</title>
   <link rel="stylesheet" href="styles.css">
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const root = document.documentElement;
+      // Check if a saved value exists
+      const properties = ['--changing-bg', '--text', '--surface'];
+      
+      properties.forEach(property => {
+        const savedValue = localStorage.getItem(property);
+      
+        if (savedValue) {
+            root.style.setProperty(property, savedValue);
+        }
+      });
+    });
+  </script>
 </head>
 <body>
 

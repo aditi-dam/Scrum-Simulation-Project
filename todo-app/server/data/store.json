@@ -4,13 +4,22 @@
       "id": "1776655093654",
       "username": "annalei",
       "passwordHash": "$2b$12$sKkyRSC3P7fNWXdizCekvekTBzw5RRNnu3ADqdxa7QsxZJcrH5QfS",
-      "createdAt": "2026-04-20T03:18:13.654Z"
+      "createdAt": "2026-04-20T03:18:13.654Z",
+      "bgColor": "#f7f6f3"
     },
     {
       "id": "1777319602101",
       "username": "jcantos",
       "passwordHash": "$2b$12$27KU4dzUnu1qghjg95rqkup7GouOjdUSNl08//aPNJuuUwYBJGwaC",
-      "createdAt": "2026-04-27T19:53:22.101Z"
+      "createdAt": "2026-04-27T19:53:22.101Z",
+      "bgColor": "#f7f6f3"
+    },
+    {
+      "id": "1778190338202",
+      "username": "aditi",
+      "passwordHash": "$2b$12$a4XSM2pHTSKIMSsL2SZ5Eer5Fqz5akB48IguMm51Goz/vXbJCZQ0y",
+      "createdAt": "2026-05-07T21:45:38.202Z",
+      "bgColor": "#d5aaaa"
     }
   ],
   "tasks": [
@@ -139,6 +148,105 @@
       "category": "school",
       "dueDate": "2026-04-30",
       "color": "#000000"
+    },
+    {
+      "id": "1777396150813",
+      "userId": "guest-1777396143840",
+      "title": "assignment submission",
+      "completed": false,
+      "category": "school",
+      "dueDate": null,
+      "color": "#000000"
+    },
+    {
+      "id": "1777396161231",
+      "userId": "guest-1777396143840",
+      "title": "interview",
+      "completed": false,
+      "category": "home",
+      "dueDate": null,
+      "color": "#000000"
+    },
+    {
+      "id": "1777396168868",
+      "userId": "guest-1777396143840",
+      "title": "office meeting",
+      "completed": false,
+      "category": "work",
+      "dueDate": null,
+      "color": "#000000"
+    },
+    {
+      "id": "1778020693049",
+      "userId": "guest-1778020678448",
+      "title": "example task",
+      "completed": false,
+      "category": "school",
+      "dueDate": null,
+      "color": "#53c1d0"
+    },
+    {
+      "id": "1778021976975",
+      "userId": "guest-1778021965950",
+      "title": "test",
+      "completed": false,
+      "category": "school",
+      "dueDate": null,
+      "color": "#000000"
+    },
+    {
+      "id": "1778022340481",
+      "userId": "guest-1778022334756",
+      "title": "test",
+      "completed": false,
+      "category": "school",
+      "dueDate": null,
+      "color": "#000000"
+    },
+    {
+      "id": "1778022346849",
+      "userId": "guest-1778022334756",
+      "title": "test",
+      "completed": false,
+      "category": "school",
+      "dueDate": null,
+      "color": "#000000"
+    },
+    {
+      "id": "1778023707336",
+      "userId": "guest-1778023668246",
+      "title": "Sample task",
+      "completed": false,
+      "category": "home",
+      "dueDate": null,
+      "color": "#cd2d2d"
+    },
+    {
+      "id": "1778023727063",
+      "userId": "guest-1778023668246",
+      "title": "Meeting with shareholders",
+      "completed": false,
+      "category": "work",
+      "dueDate": null,
+      "color": "#4b92be"
+    },
+    {
+      "id": "1778196713336",
+      "userId": "1778190338202",
+      "title": "Invention",
+      "completed": false,
+      "category": "home",
+      "dueDate": "2026-05-07",
+      "color": "#e17070"
+    },
+    {
+      "id": "1778198528934",
+      "userId": "1778190338202",
+      "title": "Happiness time",
+      "completed": true,
+      "category": "home",
+      "dueDate": "2027-03-26",
+      "color": "#5fa451"
     }
   ],
   "categoryLabels": {

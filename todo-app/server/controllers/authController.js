@@ -44,7 +44,8 @@ exports.register = async (req, res) => {
       id: Date.now().toString(),
       username,
       passwordHash,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(), 
+      bgColor: "#f7f6f3"
     };
 
     store.users.push(newUser);
@@ -125,3 +126,40 @@ exports.guest = async (req, res) => {
     user: req.session.user
   });
 };
+
+exports.getBgColor = async (req, res) => {
+  try {
+    // const username = cleanString(req.body.username).toLowerCase();
+    const userId = req.session.user.id;
+    const store = await readStore();
+    const user = store.users.find((u) => u.id === userId);
+    const bgColor = user.bgColor;
+    res.json({ color: bgColor });
+  } catch (e) {
+    console.log("No bg color found.")
+  }
+}
+
+exports.updateBgColor = async (req, res) => {
+  try {
+    const newBgColor = req.body.newColor;
+
+    const currUserId = req.session.user.id;
+    const store = await readStore();
+
+    store.users = store.users.map((user) => {
+      if (user.id === currUserId) {
+        return {
+          ...user, 
+          bgColor: newBgColor !== undefined ? newBgColor : user.bgColor
+        };
+      }
+      return user;
+    });
+
+    await writeStore(store);
+    res.json({ message: "User bg color updated." })
+  } catch (e) {
+    console.log("An error occurred while updating bg color.")
+  }
+}

@@ -25,9 +25,72 @@ async function protectPage() {
   return user;
 }
 
+
+async function getBackgroundColor() {
+  const usernameVar = await getCurrentUser();
+  const username = usernameVar.username;
+  const color_res = await fetch("/auth/getBgColor", { 
+    method: "GET", 
+    headers: { "Content-Type": "application/json" },
+    credentials: "include"
+  });
+
+  if (color_res.ok) {
+    const bgColorObject = await color_res.json();
+    const bgColor = bgColorObject.color;
+
+    const root = document.documentElement;
+    if (bgColor !== document.body.style.background) {
+      root.style.setProperty('--changing-bg', bgColor);
+      localStorage.setItem('--changing-bg', bgColor);
+    }
+
+    const rgb = hexToRgb(bgColor);
+    const luminance = getLuminance(rgb.r, rgb.g, rgb.b);
+
+    // const root = document.documentElement;
+
+    if (luminance > 0.179) {
+      root.style.setProperty('--text', '#000000');
+      root.style.setProperty('--surface', '#ffffff');
+
+      localStorage.setItem('--text', '#000000');
+      localStorage.setItem('--surface', '#ffffff');
+
+    } else {
+      root.style.setProperty('--text', '#ffffff');
+      root.style.setProperty('--surface', '#000000');
+
+      localStorage.setItem('--text', '#ffffff');
+      localStorage.setItem('--surface', '#000000');
+    }
+  }
+}
+
+function hexToRgb(hex) {
+  hex = hex.replace('#', '');
+
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+
+  return { r, g, b };
+}
+
+function getLuminance(r, g, b) {
+  const a = [r, g, b].map(v => {
+    v /= 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  });
+  return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+}
+
+
 async function fetchTasks() {
   const user = await protectPage();
   if (!user) return;
+
+  getBackgroundColor();
 
   const res = await fetch(API_URL, { credentials: "include" });
   if (!res.ok) return;
@@ -39,6 +102,8 @@ async function fetchTasks() {
 async function fetchCompletedTasks() {
   const user = await protectPage();
   if (!user) return;
+
+  getBackgroundColor();
 
   const res = await fetch(API_URL, { credentials: "include" });
   if (!res.ok) return;
@@ -159,6 +224,23 @@ function sortByDate() {
       tasks.sort((a, b) => new Date(a.dueDate || 0) - new Date(b.dueDate || 0));
       displayTasks(tasks);
     });
+}
+
+async function changeBgColor() {
+  const newColor = document.getElementById("bgColor").value;
+  
+  await fetch("/auth/updateBgColor", {
+    method: "POST", 
+    headers: { "Content-Type": "application/json" },
+    credentials: "include", 
+    body: JSON.stringify({ newColor })
+  });
+
+  if (window.location.pathname.includes("completed")) {
+    fetchCompletedTasks();
+  } else {
+    fetchTasks();
+  }
 }
 
 async function logout() {
